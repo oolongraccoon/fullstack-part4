@@ -17,37 +17,25 @@ const initialBlogs = [
     url: 'https://example.com/article2',
     likes: 10,
     __v: 0
+  },
+  {
+    _id: '5a422aa71b54a676234d17fa',
+    title: 'Title 3',
+    author: 'Author 3',
+    url: 'https://example.com/article3',
+    likes: 15,
+    __v: 0
   }
 ]
 
+// const nonExistingId = async () => {
+//   const note = new Note({ content: 'willremovethissoon' })
+//   await note.save()
+//   await note.deleteOne()
 
-const dummy = (blogs) => {
-    return 1
-  }
-  
+//   return note._id.toString()
+// }
 
-const totalLikes = (blogs) =>{
-    const likes = blogs.reduce(function(sum, blog){
-         
-        return sum + blog.likes
-    },0)
-    return likes  
-}
-const favoriteBlog = (blogs) =>{
-    let maxLikes = -1
-    for (const blog of blogs) {
-        if (blog.likes > maxLikes) {
-          maxLikes = blog.likes
-          favorite = blog
-        }
-    }
-
-    return blogs.length === 0
-        ? null
-        : favorite        
-}
-
- 
 const blogsInDb = async () => {
   const blogs = await Blog.find({})
   return blogs.map(blog => blog.toJSON())
@@ -57,10 +45,5 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 module.exports = {
-    dummy,
-    totalLikes,
-    favoriteBlog,
-    initialBlogs, 
-    blogsInDb,
-    usersInDb
-  }
+  initialBlogs, blogsInDb,usersInDb
+}
