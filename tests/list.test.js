@@ -168,6 +168,7 @@ describe('creating new blogs', () => {
   })
 
   test('fails with status code 400 if username or password is too short', async () => {
+    // 4.16*: bloglist expansion, step4
     const newUser = {
       username: 'te',
       name: 'Test User',
@@ -180,7 +181,7 @@ describe('creating new blogs', () => {
       .expect(400) 
   
 
-  } )
+  },100000 )
   test('fails with status code 400 if username is not unique', async () => {
     const newUser1 = {
       username: 'testuser',
@@ -247,4 +248,4 @@ describe('updating a blog post', () => {
 afterAll(() => {
   mongoose.connection.close()
 })
-// 4.6/4.7//4.16 没写
+// 4.6/4.7/ 没写

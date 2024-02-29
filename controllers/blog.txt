@@ -10,17 +10,9 @@ blogsRouter.get('/api/blogs', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/api/blogs', middleware.tokenExtractor,async (request, response) => {
+blogsRouter.post('/api/blogs', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
   const blogData = request.body
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
- 
-  if(!user){
-    return response.status(400).json({ error: 'user is missing' });
-  }
+  const user = request.user
   console.log(JSON.stringify(user))
   if (typeof blogData.likes === 'undefined') {
     blogData.likes = 0
@@ -58,16 +50,8 @@ blogsRouter.get('/api/blogs/:id', async (request, response) => {
   }
 })
 // 4.21*: bloglist expansion, step9
-blogsRouter.delete('/api/blogs/:id', middleware.tokenExtractor, async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
- 
-  if(!user){
-    return response.status(400).json({ error: 'user is missing' });
-  }
+blogsRouter.delete('/api/blogs/:id',middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
+  const user = request.user
   const blog = await Blog.findById(request.params.id)
   if (!blog) {
     return response.status(404).json({ error: 'blog not found' })
