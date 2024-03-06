@@ -10,13 +10,9 @@ blogsRouter.get('/api/blogs', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/api/blogs', middleware.tokenExtractor,async (request, response) => {
+blogsRouter.post('/api/blogs', middleware.userExtractor,async (request, response) => {
   const blogData = request.body
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
+  const user = request.user
  
   if(!user){
     return response.status(400).json({ error: 'user is missing' });
@@ -58,12 +54,8 @@ blogsRouter.get('/api/blogs/:id', async (request, response) => {
   }
 })
 // 4.21*: bloglist expansion, step9
-blogsRouter.delete('/api/blogs/:id', middleware.tokenExtractor, async (request, response) => {
-  const decodedToken = jwt.verify(request.token, process.env.SECRET)
-  if (!decodedToken.id) {
-    return response.status(401).json({ error: 'token invalid' })
-  }
-  const user = await User.findById(decodedToken.id)
+blogsRouter.delete('/api/blogs/:id',  middleware.userExtractor, async (request, response) => {
+  const user = request.user
  
   if(!user){
     return response.status(400).json({ error: 'user is missing' });
